@@ -15,7 +15,13 @@ export const PeerProvider = ({ children }) => {
     const [incomingFile, setIncomingFile] = useState(null);
     const [fileProgress, setFileProgress] = useState(0);
     const [receivedFiles, setReceivedFiles] = useState([]);
-    const [remoteCode, setRemoteCode] = useState('// Connected! Start typing...');
+    const [codeState, setCodeState] = useState('// Connected! Start typing...');
+    const codeRef = useRef(codeState); // Keep track for callbacks
+
+    // Update ref when state changes
+    useEffect(() => {
+        codeRef.current = codeState;
+    }, [codeState]);
 
     // Helper to strictly format ID
     const getPeerId = (pin) => `vignan-pad-${pin}`;
@@ -87,7 +93,10 @@ export const PeerProvider = ({ children }) => {
             setIsConnected(true);
             setError('');
 
-            // Send initial hello or sync state could go here
+            // Send initial state if we have content
+            if (codeRef.current) {
+                connection.send({ type: 'CODE_UPDATE', code: codeRef.current });
+            }
         });
 
         connection.on('data', (data) => {
@@ -103,7 +112,7 @@ export const PeerProvider = ({ children }) => {
 
     const handleData = (data, connection) => {
         if (data.type === 'CODE_UPDATE') {
-            setRemoteCode(data.code);
+            setCodeState(data.code);
         } else if (data.type === 'FILE_META') {
             setIncomingFile({
                 name: data.name,
@@ -139,9 +148,10 @@ export const PeerProvider = ({ children }) => {
         }
     };
 
-    const sendCode = (code) => {
+    const handleCodeUpdate = (newCode) => {
+        setCodeState(newCode);
         if (conn) {
-            conn.send({ type: 'CODE_UPDATE', code });
+            conn.send({ type: 'CODE_UPDATE', code: newCode });
         }
     };
 
@@ -193,9 +203,9 @@ export const PeerProvider = ({ children }) => {
             myId,
             error,
             isHost,
-            sendCode,
+            updateCode: handleCodeUpdate,
             sendFile,
-            remoteCode,
+            code: codeState,
             fileProgress,
             incomingFile,
             receivedFiles,

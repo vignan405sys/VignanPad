@@ -4,20 +4,11 @@ import { usePeer } from '../context/PeerContext';
 import { Copy, Check } from 'lucide-react';
 
 const CodePad = () => {
-    const { sendCode, remoteCode, isConnected } = usePeer();
-    const [code, setCode] = useState('// Determine the language automatically or start typing...');
+    const { updateCode, code, isConnected, isHost } = usePeer();
     const [copied, setCopied] = useState(false);
 
-    // Sync remote code
-    useEffect(() => {
-        if (remoteCode && remoteCode !== code) {
-            setCode(remoteCode);
-        }
-    }, [remoteCode]);
-
     const handleEditorChange = (value) => {
-        setCode(value);
-        sendCode(value);
+        updateCode(value);
     };
 
     const handleCopy = () => {
@@ -30,10 +21,12 @@ const CodePad = () => {
         <div className="flex flex-col h-full bg-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl border border-white/10">
             <div className="flex items-center justify-between px-4 py-2 bg-[#2d2d2d] border-b border-white/5">
                 <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
-                    <span className="ml-2 text-xs text-stone-400 font-mono">Shared Editor</span>
+                    <div className={`w-3 h-3 rounded-full ${!isConnected ? 'bg-red-500' : 'bg-red-900/30'}`} />
+                    <div className={`w-3 h-3 rounded-full ${!isConnected && !isHost ? 'bg-yellow-500' : 'bg-yellow-900/30'}`} title={isHost ? "Hosting" : "Connecting"} />
+                    <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-green-900/30'}`} />
+                    <span className="ml-2 text-xs text-stone-400 font-mono">
+                        {isConnected ? 'Connected' : (isHost ? 'Waiting for Peer...' : 'Disconnected')}
+                    </span>
                 </div>
                 <button
                     onClick={handleCopy}
@@ -60,9 +53,9 @@ const CodePad = () => {
                     }}
                 />
             </div>
-            {!isConnected && (
+            {!isConnected && !isHost && (
                 <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-10 pointer-events-none">
-                    <span className="px-4 py-2 bg-black/80 rounded-lg border border-white/10">Not Connected</span>
+                    <span className="px-4 py-2 bg-black/80 rounded-lg border border-white/10">Connecting...</span>
                 </div>
             )}
         </div>
