@@ -4,10 +4,14 @@ import { Upload, File, Download, X, Box, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FileShare = () => {
-    const { sendFile, fileProgress, incomingFile, receivedFiles } = usePeer();
+    const { sendFile, fileProgress, incomingFile, receivedFiles, isConnected } = usePeer();
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
+        if (!isConnected) {
+            alert("No peer connected. Wait for someone to join.");
+            return;
+        }
         const file = e.target.files[0];
         if (file) {
             sendFile(file);
