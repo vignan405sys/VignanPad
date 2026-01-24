@@ -82,7 +82,10 @@ export const PeerProvider = ({ children }) => {
         newPeer.on('open', () => {
             const targetId = getPeerId(pin);
             console.log('Connecting to:', targetId);
-            const connection = newPeer.connect(targetId);
+            const connection = newPeer.connect(targetId, {
+                serialization: 'binary',
+                reliable: true
+            });
             handleConnection(connection);
         });
 
@@ -161,7 +164,11 @@ export const PeerProvider = ({ children }) => {
     };
 
     const sendFile = (file) => {
-        if (!conn) return;
+        if (!conn) {
+            console.error('No connection, cannot send file');
+            return;
+        }
+        console.log('Sending file:', file.name, 'Size:', file.size);
 
         // Send meta
         conn.send({
