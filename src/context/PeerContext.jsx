@@ -82,10 +82,7 @@ export const PeerProvider = ({ children }) => {
         newPeer.on('open', () => {
             const targetId = getPeerId(pin);
             console.log('Connecting to:', targetId);
-            const connection = newPeer.connect(targetId, {
-                serialization: 'binary',
-                reliable: true
-            });
+            const connection = newPeer.connect(targetId);
             handleConnection(connection);
         });
 
