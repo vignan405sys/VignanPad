@@ -2,6 +2,7 @@
 // Replace with your own Firebase project config from console.firebase.google.com
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCH4Ijp4l0xf4UXpzxeXml8HXDPLPH1PSg",
@@ -16,5 +17,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
+// Initialize Firestore and Storage
 export const db = getFirestore(app);
+export const storage = getStorage(app);
+

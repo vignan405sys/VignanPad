@@ -4,12 +4,12 @@ import { Upload, File, Download, X, Box, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FileShare = () => {
-    const { sendFile, fileProgress, incomingFile, receivedFiles, isConnected } = usePeer();
+    const { sendFile, fileProgress, incomingFile, receivedFiles, isConnected, isHost } = usePeer();
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
         if (!isConnected) {
-            alert("No peer connected. Wait for someone to join.");
+            alert("No peer connected. Wait for someone to join with your PIN.");
             return;
         }
         const file = e.target.files[0];
@@ -28,11 +28,23 @@ const FileShare = () => {
     };
 
     return (
-        <div className="h-full flex flex-col gap-6">
+        <div className="h-full flex flex-col gap-4">
+            {/* Connection Status Banner */}
+            <div className={`px-4 py-2 rounded-lg text-center text-sm font-medium ${isConnected ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}`}>
+                {isConnected
+                    ? '✓ Connected - Ready to send files!'
+                    : isHost
+                        ? '⏳ Waiting for peer to join with your PIN...'
+                        : '⚠️ Not connected'}
+            </div>
+
             {/* Upload Area */}
             <div
-                className="flex-1 glass-panel rounded-xl border-dashed border-2 border-white/20 flex flex-col items-center justify-center p-8 hover:bg-white/5 transition-colors cursor-pointer group"
-                onClick={() => fileInputRef.current.click()}
+                className={`flex-1 glass-panel rounded-xl border-dashed border-2 flex flex-col items-center justify-center p-6 transition-colors ${isConnected
+                        ? 'border-emerald-500/30 hover:bg-emerald-500/5 cursor-pointer'
+                        : 'border-white/10 opacity-50 cursor-not-allowed'
+                    } group`}
+                onClick={() => isConnected && fileInputRef.current.click()}
             >
                 <input
                     type="file"
@@ -40,11 +52,13 @@ const FileShare = () => {
                     ref={fileInputRef}
                     onChange={handleFileChange}
                 />
-                <div className="p-4 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:scale-110 transition-transform mb-4">
-                    <Upload size={32} />
+                <div className={`p-4 rounded-full mb-3 transition-transform ${isConnected ? 'bg-emerald-500/20 text-emerald-400 group-hover:scale-110' : 'bg-slate-500/20 text-slate-500'}`}>
+                    <Upload size={28} />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Send a File</h3>
-                <p className="text-sm text-slate-400">Click to browse or drag & drop</p>
+                <h3 className="text-lg font-semibold mb-1">Send a File</h3>
+                <p className="text-xs text-slate-400">
+                    {isConnected ? 'Click to browse or drag & drop' : 'Connect with a peer first'}
+                </p>
             </div>
 
             {/* Transfers */}
