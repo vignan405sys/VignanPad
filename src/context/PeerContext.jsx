@@ -15,8 +15,13 @@ export const PeerProvider = ({ children }) => {
     const [incomingFile, setIncomingFile] = useState(null);
     const [fileProgress, setFileProgress] = useState(0);
     const [receivedFiles, setReceivedFiles] = useState([]);
-    const [codeState, setCodeState] = useState('// Connected! Start typing...');
+    const [codeState, setCodeState] = useState('// Start typing your code here...');
     const codeRef = useRef(codeState); // Keep track for callbacks
+
+    // Function to set initial code (e.g., from cloud load)
+    const setInitialCode = (content) => {
+        setCodeState(content);
+    };
 
     // Update ref when state changes
     useEffect(() => {
@@ -209,7 +214,8 @@ export const PeerProvider = ({ children }) => {
             fileProgress,
             incomingFile,
             receivedFiles,
-            peer
+            peer,
+            setInitialCode
         }}>
             {children}
         </PeerContext.Provider>
