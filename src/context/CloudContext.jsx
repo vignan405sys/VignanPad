@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 import { doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const CloudContext = createContext();
 
@@ -37,6 +38,7 @@ export const CloudProvider = ({ children }) => {
                 language,
                 createdAt: Timestamp.now(),
                 expiresAt,
+                type: 'snippet' // Add type to distinguish
             });
 
             setSavedCode(code);
@@ -50,7 +52,42 @@ export const CloudProvider = ({ children }) => {
         }
     };
 
-    // Load code from Firestore by code
+    // Upload file to Storage with 24-hour expiry (logical)
+    const uploadFileToCloud = async (file) => {
+        setIsSaving(true);
+        setCloudError('');
+        setSavedCode('');
+
+        try {
+            const code = generateCode();
+            const storageRef = ref(storage, `uploads/${code}/${file.name}`);
+
+            await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            const expiresAt = Timestamp.fromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)); // 24 hours logicial expiry
+
+            await setDoc(doc(db, 'snippets', code), {
+                name: file.name,
+                url: downloadURL,
+                size: file.size,
+                type: 'file',
+                createdAt: Timestamp.now(),
+                expiresAt
+            });
+
+            setSavedCode(code);
+            setIsSaving(false);
+            return code;
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            setCloudError('Failed to upload file.');
+            setIsSaving(false);
+            return null;
+        }
+    };
+
+    // Load code or file metadata from Firestore
     const loadFromCloud = async (code) => {
         setIsLoading(true);
         setCloudError('');
@@ -76,7 +113,7 @@ export const CloudProvider = ({ children }) => {
             }
 
             setIsLoading(false);
-            return data.content;
+            return data; // Return full data object to check type
         } catch (error) {
             console.error('Error loading from cloud:', error);
             setCloudError('Failed to load. Check your connection.');
@@ -88,6 +125,7 @@ export const CloudProvider = ({ children }) => {
     return (
         <CloudContext.Provider value={{
             saveToCloud,
+            uploadFileToCloud,
             loadFromCloud,
             isSaving,
             isLoading,

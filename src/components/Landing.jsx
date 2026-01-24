@@ -25,12 +25,28 @@ const Landing = () => {
         e.preventDefault();
         if (!cloudCodeInput || cloudCodeInput.length !== 6) return;
 
-        const content = await loadFromCloud(cloudCodeInput);
-        if (content) {
-            // Pre-fill the code and then create a session
-            setInitialCode(content);
-            createSession();
+        const data = await loadFromCloud(cloudCodeInput);
+        if (data) {
+            if (data.type === 'file') {
+                // It's a file, trigger download
+                window.open(data.url, '_blank');
+                // Optional: Show success message
+                alert(`File found: ${data.name} (${formatBytes(data.size)}) - Downloading...`);
+            } else {
+                // It's code, start session
+                setInitialCode(data.content);
+                createSession();
+            }
         }
+    };
+
+    const formatBytes = (bytes, decimals = 2) => {
+        if (!+bytes) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
     };
 
     return (
