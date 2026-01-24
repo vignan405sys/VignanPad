@@ -4,12 +4,13 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCH4Ijp4l0xf4UXpzxeXml8HXDPLPH1PSg",
+    authDomain: "vignanpad.firebaseapp.com",
+    projectId: "vignanpad",
+    storageBucket: "vignanpad.firebasestorage.app",
+    messagingSenderId: "903092439725",
+    appId: "1:903092439725:web:f1f4f9e5a7780575e25424",
+    measurementId: "G-1K8YWXNQMV"
 };
 
 // Initialize Firebase
