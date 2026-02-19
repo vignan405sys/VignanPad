@@ -33,8 +33,8 @@ const CodePad = () => {
     };
 
     return (
-        <div className="flex flex-col h-full bg-[#1e1e1e] rounded-xl overflow-hidden shadow-2xl border border-white/10 relative">
-            <div className="flex items-center justify-between px-4 py-2 bg-[#2d2d2d] border-b border-white/5">
+        <div className="flex flex-col h-full bg-[#1a1a1e] rounded-panel overflow-hidden shadow-panel border border-white/10 relative">
+            <div className="flex items-center justify-between px-4 py-2.5 bg-[#25252b] border-b border-white/5">
                 <div className="flex items-center gap-2">
                     <div className={`w-3 h-3 rounded-full ${!isConnected ? 'bg-red-500' : 'bg-red-900/30'}`} />
                     <div className={`w-3 h-3 rounded-full ${!isConnected && !isHost ? 'bg-yellow-500' : 'bg-yellow-900/30'}`} title={isHost ? "Hosting" : "Connecting"} />
@@ -47,7 +47,7 @@ const CodePad = () => {
                     <button
                         onClick={handleSaveToCloud}
                         disabled={isSaving}
-                        className="flex items-center gap-1.5 px-2 py-1 text-xs bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 rounded transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 rounded-md border border-indigo-500/20 transition-colors disabled:opacity-50"
                         title="Save to Cloud (72h)"
                     >
                         <Cloud size={14} />
@@ -55,7 +55,7 @@ const CodePad = () => {
                     </button>
                     <button
                         onClick={handleCopy}
-                        className="p-1.5 hover:bg-white/10 rounded transition-colors"
+                        className="p-1.5 hover:bg-white/10 rounded-md transition-colors"
                         title="Copy Code"
                     >
                         {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} className="text-stone-400" />}
@@ -99,7 +99,7 @@ const CodePad = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-slate-800 border border-white/10 rounded-xl p-6 max-w-sm w-full mx-4 text-center"
+                            className="glass-panel rounded-panel-lg p-6 max-w-sm w-full mx-4 text-center border-white/10"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
@@ -136,7 +136,7 @@ const CodePad = () => {
 
             {/* Error display */}
             {cloudError && (
-                <div className="absolute bottom-4 left-4 right-4 bg-red-500/20 border border-red-500/30 text-red-200 px-4 py-2 rounded-lg text-sm">
+                <div className="absolute bottom-4 left-4 right-4 bg-red-500/20 border border-red-500/25 text-red-200 px-4 py-2 rounded-panel text-sm font-medium">
                     {cloudError}
                 </div>
             )}

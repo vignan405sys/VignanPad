@@ -12,7 +12,7 @@ function App() {
     const inSession = !!peer;
 
     return (
-        <div className="min-h-screen text-white font-sans selection:bg-indigo-500/30">
+        <div className="min-h-screen text-white font-sans">
             <AnimatePresence mode="wait">
                 {!inSession ? (
                     <motion.div

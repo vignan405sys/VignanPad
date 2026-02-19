@@ -45,16 +45,16 @@ const FileShare = () => {
     return (
         <div className="h-full flex flex-col gap-4">
             {/* Mode Toggle */}
-            <div className="flex p-1 bg-black/20 rounded-lg">
+            <div className="flex p-1 glass-panel rounded-panel border-white/5">
                 <button
                     onClick={() => { setMode('p2p'); setSavedCode(''); }}
-                    className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${mode === 'p2p' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-white'}`}
+                    className={`flex-1 py-2 text-xs font-medium rounded-md transition-all duration-200 flex items-center justify-center gap-2 ${mode === 'p2p' ? 'bg-indigo-500 text-white shadow-glow-sm' : 'text-slate-400 hover:text-white'}`}
                 >
                     <Users size={14} /> P2P Direct
                 </button>
                 <button
                     onClick={() => setMode('cloud')}
-                    className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${mode === 'cloud' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-white'}`}
+                    className={`flex-1 py-2 text-xs font-medium rounded-md transition-all duration-200 flex items-center justify-center gap-2 ${mode === 'cloud' ? 'bg-indigo-500 text-white shadow-glow-sm' : 'text-slate-400 hover:text-white'}`}
                 >
                     <Cloud size={14} /> Cloud Send
                 </button>
@@ -63,7 +63,7 @@ const FileShare = () => {
             {mode === 'p2p' ? (
                 <>
                     {/* Connection Status Banner */}
-                    <div className={`px-4 py-2 rounded-lg text-center text-sm font-medium ${isConnected ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}`}>
+                    <div className={`px-4 py-2.5 rounded-panel text-center text-sm font-medium ${isConnected ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/20' : 'bg-amber-500/20 text-amber-300 border border-amber-500/20'}`}>
                         {isConnected
                             ? '✓ Connected - Ready to send files!'
                             : isHost
@@ -73,8 +73,8 @@ const FileShare = () => {
 
                     {/* Upload Area */}
                     <div
-                        className={`flex-1 glass-panel rounded-xl border-dashed border-2 flex flex-col items-center justify-center p-6 transition-colors ${isConnected
-                            ? 'border-emerald-500/30 hover:bg-emerald-500/5 cursor-pointer'
+                        className={`flex-1 glass-panel rounded-panel border-dashed border-2 flex flex-col items-center justify-center p-6 transition-all duration-200 ${isConnected
+                            ? 'border-emerald-500/30 hover:bg-emerald-500/5 hover:border-emerald-500/50 cursor-pointer'
                             : 'border-white/10 opacity-50 cursor-not-allowed'
                             } group`}
                         onClick={() => isConnected && fileInputRef.current.click()}
@@ -99,7 +99,7 @@ const FileShare = () => {
                     {/* Cloud Upload Area */}
                     {!savedCode ? (
                         <div
-                            className={`flex-1 glass-panel rounded-xl border-dashed border-2 border-indigo-500/30 flex flex-col items-center justify-center p-6 transition-colors hover:bg-indigo-500/5 cursor-pointer group`}
+                            className="flex-1 glass-panel rounded-panel border-dashed border-2 border-indigo-500/30 flex flex-col items-center justify-center p-6 transition-all duration-200 hover:bg-indigo-500/5 hover:border-indigo-500/50 cursor-pointer group"
                             onClick={() => !isSaving && fileInputRef.current.click()}
                         >
                             <input
@@ -128,7 +128,7 @@ const FileShare = () => {
                             )}
                         </div>
                     ) : (
-                        <div className="flex-1 glass-panel rounded-xl p-6 flex flex-col items-center justify-center text-center">
+                        <div className="flex-1 glass-panel rounded-panel p-6 flex flex-col items-center justify-center text-center">
                             <div className="p-3 bg-emerald-500/20 rounded-full mb-4">
                                 <Check size={32} className="text-emerald-400" />
                             </div>
@@ -164,8 +164,8 @@ const FileShare = () => {
                 </div>
             )}
 
-            {/* Transfers List (Only for P2P for now, or cloud history if needed) */}
-            <div className="flex-1 glass-panel rounded-xl p-4 flex flex-col overflow-hidden min-h-[0]">
+            {/* Transfers List */}
+            <div className="flex-1 glass-panel rounded-panel p-4 flex flex-col overflow-hidden min-h-[0]">
                 <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 px-2">
                     {mode === 'p2p' ? 'Direct Transfers' : 'Cloud Status'}
                 </h3>
