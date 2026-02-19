@@ -1,5 +1,19 @@
 # Deploy VignanPad
 
+## Sensitive info (not in repo)
+
+Firebase config is in env vars. **Never commit `.env`**.
+
+- **Local dev:** Copy `.env.example` → `.env` and add your Firebase values.
+- **GitHub Pages:** Add these as **Secrets** in repo **Settings → Secrets and variables → Actions**:
+  - `VITE_FIREBASE_API_KEY`
+  - `VITE_FIREBASE_AUTH_DOMAIN`
+  - `VITE_FIREBASE_PROJECT_ID`
+  - `VITE_FIREBASE_STORAGE_BUCKET`
+  - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+  - `VITE_FIREBASE_APP_ID`
+  - `VITE_FIREBASE_MEASUREMENT_ID`
+
 ## Relevant paths
 
 | Platform        | Base path        | URL example                          |

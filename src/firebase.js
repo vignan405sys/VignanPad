@@ -1,17 +1,16 @@
-// Firebase configuration
-// Replace with your own Firebase project config from console.firebase.google.com
+// Firebase configuration - uses env vars so secrets stay out of the repo
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCH4Ijp4l0xf4UXpzxeXml8HXDPLPH1PSg",
-    authDomain: "vignanpad.firebaseapp.com",
-    projectId: "vignanpad",
-    storageBucket: "vignanpad.firebasestorage.app",
-    messagingSenderId: "903092439725",
-    appId: "1:903092439725:web:f1f4f9e5a7780575e25424",
-    measurementId: "G-1K8YWXNQMV"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -20,4 +19,3 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firestore and Storage
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-
