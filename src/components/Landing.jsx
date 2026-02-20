@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Box, Shield, Zap, Cloud, Loader2 } from 'lucide-react';
 
 const Landing = () => {
-    const { createSession, joinSession, error, setInitialCode } = usePeer();
-    const { loadFromCloud, isLoading, cloudError } = useCloud();
+    const { createSession, joinSession, error, setError, setInitialCode } = usePeer();
+    const { loadFromCloud, isLoading, cloudError, setCloudError } = useCloud();
     const [pinInput, setPinInput] = useState('');
     const [cloudCodeInput, setCloudCodeInput] = useState('');
     const [isJoining, setIsJoining] = useState(false);
@@ -19,6 +19,11 @@ const Landing = () => {
     const handleJoin = (e) => {
         e.preventDefault();
         joinSession(pinInput);
+    };
+
+    const clearErrors = () => {
+        setError('');
+        setCloudError('');
     };
 
     const handleLoadFromCloud = async (e) => {
@@ -75,7 +80,7 @@ const Landing = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className="glass-panel card-interactive p-6 rounded-panel-lg flex flex-col items-center gap-4 cursor-pointer"
-                        onClick={handleCreate}
+                        onClick={() => { clearErrors(); handleCreate(); }}
                     >
                         <div className="p-3.5 rounded-full bg-emerald-500/20 text-emerald-400 ring-2 ring-emerald-500/10">
                             <Zap size={24} strokeWidth={2} />
@@ -89,7 +94,7 @@ const Landing = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className={`glass-panel card-interactive p-6 rounded-panel-lg flex flex-col items-center gap-4 ${isJoining ? 'ring-2 ring-indigo-500/60 shadow-glow-sm' : ''}`}
-                        onClick={() => { setIsJoining(true); setIsLoadingCloud(false); }}
+                        onClick={() => { clearErrors(); setIsJoining(true); setIsLoadingCloud(false); }}
                     >
                         <div className="p-3.5 rounded-full bg-blue-500/20 text-blue-400 ring-2 ring-blue-500/10">
                             <ArrowRight size={24} strokeWidth={2} />
@@ -103,11 +108,13 @@ const Landing = () => {
                             <form onSubmit={handleJoin} className="w-full flex flex-col gap-3" onClick={(e) => e.stopPropagation()}>
                                 <input
                                     type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     maxLength={6}
                                     placeholder="000000"
                                     className="glass-input w-full px-3 py-2.5 text-center text-lg tracking-[0.35em] font-medium"
                                     value={pinInput}
-                                    onChange={(e) => setPinInput(e.target.value.toUpperCase())}
+                                    onChange={(e) => setPinInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                     autoFocus
                                 />
                                 <button type="submit" className="btn-primary w-full py-2.5 text-sm">
@@ -122,7 +129,7 @@ const Landing = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className={`glass-panel card-interactive p-6 rounded-panel-lg flex flex-col items-center gap-4 ${isLoadingCloud ? 'ring-2 ring-purple-500/60 shadow-glow-sm' : ''}`}
-                        onClick={() => { setIsLoadingCloud(true); setIsJoining(false); }}
+                        onClick={() => { clearErrors(); setIsLoadingCloud(true); setIsJoining(false); }}
                     >
                         <div className="p-3.5 rounded-full bg-purple-500/20 text-purple-400 ring-2 ring-purple-500/10">
                             <Cloud size={24} strokeWidth={2} />

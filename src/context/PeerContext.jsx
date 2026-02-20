@@ -64,8 +64,9 @@ export const PeerProvider = ({ children }) => {
     };
 
     const joinSession = (pin) => {
-        if (!pin || pin.length !== 6) {
-            setError('Invalid PIN');
+        const trimmed = (pin || '').trim();
+        if (!/^\d{6}$/.test(trimmed)) {
+            setError('PIN must be exactly 6 digits.');
             return;
         }
 
@@ -80,7 +81,7 @@ export const PeerProvider = ({ children }) => {
         setIsHost(false);
 
         newPeer.on('open', () => {
-            const targetId = getPeerId(pin);
+            const targetId = getPeerId(trimmed);
             console.log('Connecting to:', targetId);
             const connection = newPeer.connect(targetId);
             handleConnection(connection);
@@ -211,6 +212,7 @@ export const PeerProvider = ({ children }) => {
             isConnected,
             myId,
             error,
+            setError,
             isHost,
             updateCode: handleCodeUpdate,
             sendFile,

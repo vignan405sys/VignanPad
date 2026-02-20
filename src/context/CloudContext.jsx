@@ -130,6 +130,7 @@ export const CloudProvider = ({ children }) => {
             isSaving,
             isLoading,
             cloudError,
+            setCloudError,
             savedCode,
             setSavedCode,
         }}>
