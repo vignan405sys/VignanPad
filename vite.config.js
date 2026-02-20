@@ -14,5 +14,19 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('monaco') || id.includes('@monaco-editor')) return 'monaco';
+            if (id.includes('firebase')) return 'firebase';
+            if (id.includes('peerjs')) return 'peerjs';
+            if (id.includes('framer-motion')) return 'framer-motion';
+            if (id.includes('react-dom') || id.includes('react/')) return 'react-vendor';
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
   },
 })
